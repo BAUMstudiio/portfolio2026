@@ -82,7 +82,7 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
   const isDesignDomain = activeDomain === "Direction Artistique & Design";
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#F0EBE1] text-[#1A1A1A] font-body selection:bg-[#00B2A9]/20 selection:text-[#1A1A1A] flex flex-col justify-between p-6 sm:p-10 md:p-12 relative">
+    <div className="h-screen w-screen overflow-hidden bg-[#F0EBE1] text-[#1A1A1A] font-body selection:bg-[#00B2A9]/20 selection:text-[#1A1A1A] flex flex-col justify-between p-4 sm:p-8 md:p-12 relative">
       
       {/* 1. INITIAL CENTERED INTRO OVERLAY (VISIBLE BEFORE FIRST SCROLL) */}
       <AnimatePresence>
@@ -93,12 +93,12 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
             onClick={() => setHasScrolled(true)}
-            className="fixed inset-0 z-50 bg-[#F0EBE1] flex flex-col items-center justify-center p-6 sm:p-12 text-center cursor-pointer select-none"
+            className="fixed inset-0 z-50 bg-[#F0EBE1] flex flex-col items-center justify-center p-4 sm:p-8 md:p-12 text-center cursor-pointer select-none"
           >
             <motion.h1
               layoutId="name"
               transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
-              className="font-display font-bold text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-[#1A1A1A] tracking-tight uppercase leading-none"
+              className="font-display font-bold text-4xl sm:text-7xl md:text-8xl lg:text-9xl text-[#1A1A1A] tracking-tight uppercase leading-none"
             >
               Matthieu BAUDIER
             </motion.h1>
@@ -108,7 +108,7 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-display font-bold text-2xl sm:text-4xl md:text-5xl text-[#00B2A9] tracking-tight mt-4 uppercase"
+              className="font-display font-bold text-2xl sm:text-4xl md:text-5xl text-[#00B2A9] tracking-tight mt-3 sm:mt-4 uppercase"
             >
               Portfolio
             </motion.span>
@@ -118,7 +118,7 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="font-body font-medium text-base sm:text-xl md:text-2xl text-[#5A5A5A] max-w-2xl mt-6 leading-relaxed"
+              className="font-body font-medium text-sm sm:text-lg md:text-xl text-[#5A5A5A] max-w-2xl mt-4 sm:mt-6 leading-relaxed"
             >
               Ingénieur innovation, Product Manager & Directeur Artistique. Un profil hybride reliant la stratégie produit, la conception technique et le design visuel pour développer des solutions numériques complètes.
             </motion.p>
@@ -128,25 +128,25 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-              className="absolute bottom-10 flex flex-col items-center gap-2 text-xs uppercase tracking-widest font-display text-[#1A1A1A]/60"
+              className="absolute bottom-8 sm:bottom-10 flex flex-col items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs uppercase tracking-widest font-display text-[#1A1A1A]/60"
             >
               <span>Scrollez pour découvrir</span>
-              <span className="text-[#00B2A9] font-bold text-base">↓</span>
+              <span className="text-[#00B2A9] font-bold text-sm sm:text-base">↓</span>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* SECTION A. EN-TÊTE (FUNCTIONAL HEADER CREATED ON FIRST SCROLL) */}
-      <header className="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-start justify-between gap-6 z-20 shrink-0">
+      <header className="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-start justify-between gap-4 sm:gap-6 z-20 shrink-0">
         
         {/* Left Column: Morphing Name + Functional Title + Single Horizontal Line Navigation */}
-        <div className="space-y-4 w-full max-w-4xl">
+        <div className="space-y-3 sm:space-y-4 w-full max-w-4xl">
           <div>
             <motion.h1
               layoutId="name"
               transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
-              className="font-display font-bold text-4xl sm:text-6xl md:text-7xl text-[#1A1A1A] tracking-tight leading-none uppercase"
+              className="font-display font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1A1A1A] tracking-tight leading-none uppercase"
             >
               Matthieu BAUDIER
             </motion.h1>
@@ -154,7 +154,7 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: hasScrolled ? 1 : 0, y: hasScrolled ? 0 : 10 }}
               transition={{ duration: 0.7, delay: 0.3, ease: [0.76, 0, 0.24, 1] }}
-              className="font-display font-semibold text-xl sm:text-2xl md:text-3xl text-[#5A5A5A] tracking-tight mt-2"
+              className="font-display font-semibold text-lg sm:text-xl md:text-2xl text-[#5A5A5A] tracking-tight mt-1.5 sm:mt-2"
             >
               Ingénieur innovation & Produit
             </motion.h2>
@@ -165,9 +165,9 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: hasScrolled ? 1 : 0, y: hasScrolled ? 0 : 15 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.76, 0, 0.24, 1] }}
-            className="w-full flex items-center justify-between gap-3 pt-1 overflow-visible"
+            className="w-full flex items-center justify-between gap-2 sm:gap-3 pt-1 overflow-hidden"
           >
-            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto snap-x no-scrollbar min-w-0 flex-1 py-1 pr-1">
               {DOMAINS.map((domain, idx) => {
                 const isActive = activeDomain === domain;
                 const count = counts[domain] || 0;
@@ -184,7 +184,7 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
                   <button
                     key={domain}
                     onClick={() => setActiveDomain(domain)}
-                    className={`relative px-4 py-2 rounded-full font-display text-xs sm:text-sm tracking-tight transition-all duration-300 whitespace-nowrap flex items-center gap-2 border ${
+                    className={`snap-start shrink-0 relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-display text-[11px] sm:text-xs md:text-sm tracking-tight transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border ${
                       isActive
                         ? `${activeBg} shadow-sm font-bold scale-105`
                         : "bg-white/70 text-[#5A5A5A] border-[#1A1A1A]/10 hover:text-[#1A1A1A] hover:border-[#00B2A9]/40 opacity-80 hover:opacity-100"
@@ -192,7 +192,7 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
                   >
                     <span>{domain}</span>
                     <span
-                      className={`font-body text-[10px] px-2 py-0.2 rounded-full ${
+                      className={`font-body text-[10px] px-1.5 sm:px-2 py-0.2 rounded-full ${
                         isActive
                           ? idx === 2 ? "bg-[#1A1A1A]/10 text-[#1A1A1A]" : "bg-white/20 text-white"
                           : "bg-[#1A1A1A]/[0.06] text-[#5A5A5A]"

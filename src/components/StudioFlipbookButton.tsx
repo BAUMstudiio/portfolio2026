@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 const STUDIO_IMAGES = [
   "/assets/images studio/Projet_Radaz_site_mockup.webp",
@@ -22,6 +23,7 @@ const STUDIO_IMAGES = [
 export default function StudioFlipbookButton() {
   const [isHovered, setIsHovered] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { isMobile } = useWindowSize();
 
   // Motion values for smooth cursor tracking
   const mouseX = useMotionValue(0);
@@ -33,42 +35,42 @@ export default function StudioFlipbookButton() {
 
   // Preload studio images for zero-flicker instant flipbook
   useEffect(() => {
+    if (isMobile) return;
     STUDIO_IMAGES.forEach((src) => {
       const img = new window.Image();
       img.src = src;
     });
-  }, []);
+  }, [isMobile]);
 
-  // Track mouse position on window while hovered
+  // Track mouse position on window while hovered (desktop only)
   useEffect(() => {
+    if (isMobile || !isHovered) return;
     const handleMouseMove = (e: MouseEvent) => {
       // Float preview card near the cursor (offset 100px left, 140px up)
       mouseX.set(e.clientX - 100);
       mouseY.set(e.clientY - 140);
     };
 
-    if (isHovered) {
-      window.addEventListener("mousemove", handleMouseMove);
-    }
+    window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [isHovered, mouseX, mouseY]);
+  }, [isHovered, isMobile, mouseX, mouseY]);
 
   // High-speed stroboscopic cycling (100ms) while hovered
   useEffect(() => {
-    if (!isHovered) return;
+    if (isMobile || !isHovered) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % STUDIO_IMAGES.length);
     }, 100);
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, isMobile]);
 
   return (
     <>
-      {/* Floating Custom Cursor Preview (Follows mouse, pointer-events-none, ZERO parasite text) */}
+      {/* Floating Custom Cursor Preview (Desktop only, pointer-events-none) */}
       <AnimatePresence>
-        {isHovered && (
+        {!isMobile && isHovered && (
           <motion.div
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -78,7 +80,7 @@ export default function StudioFlipbookButton() {
               x: springX,
               y: springY,
             }}
-            className="fixed top-0 left-0 w-56 h-36 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/90 pointer-events-none z-[100] bg-black shrink-0"
+            className="fixed top-0 left-0 w-56 h-36 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/90 pointer-events-none z-[100] bg-black shrink-0 hidden md:block"
           >
             <Image
               src={STUDIO_IMAGES[currentIndex]}
@@ -99,14 +101,14 @@ export default function StudioFlipbookButton() {
         exit={{ opacity: 0, x: 10, scale: 0.95 }}
         transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
         className="relative inline-flex items-center shrink-0 ml-auto"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => !isMobile && setIsHovered(true)}
+        onMouseLeave={() => !isMobile && setIsHovered(false)}
       >
         <a
           href="https://baumstudio.fr/"
           target="_blank"
           rel="noopener noreferrer"
-          className="relative px-5 py-2.5 rounded-full bg-[#FF3300] hover:bg-[#E02D00] text-white font-display text-xs sm:text-sm font-bold tracking-tight shadow-md hover:shadow-xl transition-all duration-300 flex items-center gap-2 border border-[#FF3300] group shrink-0 whitespace-nowrap cursor-pointer"
+          className="relative px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#FF3300] hover:bg-[#E02D00] text-white font-display text-[11px] sm:text-xs md:text-sm font-bold tracking-tight shadow-md hover:shadow-xl transition-all duration-300 flex items-center gap-1.5 sm:gap-2 border border-[#FF3300] group shrink-0 whitespace-nowrap cursor-pointer"
         >
           <span className="text-white font-bold tracking-tight">
             découvrir mon studio de design
@@ -119,3 +121,4 @@ export default function StudioFlipbookButton() {
     </>
   );
 }
+

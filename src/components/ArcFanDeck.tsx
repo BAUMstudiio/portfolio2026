@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProjectData } from "@/lib/projects";
 import Image from "next/image";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 interface ArcFanDeckProps {
   projects: ProjectData[];
@@ -13,6 +14,7 @@ interface ArcFanDeckProps {
 
 export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: ArcFanDeckProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { isMobile } = useWindowSize();
 
   const total = projects.length;
   const middleIndex = (total - 1) / 2;
@@ -35,7 +37,7 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
   };
 
   return (
-    <div className="absolute -bottom-24 md:-bottom-32 left-0 right-0 w-full h-[600px] md:h-[680px] flex items-end justify-center overflow-visible pointer-events-none">
+    <div className="absolute -bottom-24 md:-bottom-32 left-0 right-0 w-full h-[540px] sm:h-[600px] md:h-[680px] flex items-end justify-center overflow-visible pointer-events-none">
       <AnimatePresence mode="wait">
         <motion.div
           key={activeDomain}
@@ -48,16 +50,21 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
           {projects.map((project, index) => {
             const offset = index - middleIndex;
             
-            // Goldilocks spacing (~13.5vw - 14vw) for perfectly readable card edges and zero overflow
-            const xStep = total > 3 ? 13.2 : 14.2;
-            const rotateStep = total > 3 ? 9.5 : 10.5;
+            // Responsive fan formulas: tighter spread (3.8vw - 5vw) and gentle rotation (4.5deg - 6deg) on mobile (<768px)
+            const xStep = isMobile
+              ? (total > 3 ? 3.8 : 5.0)
+              : (total > 3 ? 13.2 : 14.2);
+
+            const rotateStep = isMobile
+              ? (total > 3 ? 4.5 : 6.0)
+              : (total > 3 ? 9.5 : 10.5);
 
             const rotateAngle = offset * rotateStep;
-            const xOffset = offset * xStep; // Goldilocks horizontal spread
-            const yBase = Math.abs(offset) * 22; // parabolic arc drop
+            const xOffset = offset * xStep; // responsive horizontal spread
+            const yBase = Math.abs(offset) * (isMobile ? 12 : 22); // parabolic arc drop
             
-            const isHovered = hoveredIndex === index;
-            const isAnotherHovered = hoveredIndex !== null && !isHovered;
+            const isHovered = !isMobile && hoveredIndex === index;
+            const isAnotherHovered = !isMobile && hoveredIndex !== null && !isHovered;
 
             // When hovered: pull straight out of the deck (translate Y up by 45px) while CONSERVING xOffset and rotateAngle!
             const currentY = isHovered ? yBase - 45 : yBase;
@@ -78,9 +85,9 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                 variants={{
                   initial: {
                     opacity: 0,
-                    x: "-25vw",
-                    rotate: rotateAngle - 12,
-                    y: yBase + 100,
+                    x: isMobile ? "-15vw" : "-25vw",
+                    rotate: rotateAngle - (isMobile ? 6 : 12),
+                    y: yBase + 80,
                   },
                   animate: {
                     opacity: 1,
@@ -95,9 +102,9 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                   },
                   exit: {
                     opacity: 0,
-                    x: `${xOffset + 25}vw`,
-                    rotate: rotateAngle + 12,
-                    y: yBase + 120,
+                    x: `${xOffset + (isMobile ? 15 : 25)}vw`,
+                    rotate: rotateAngle + (isMobile ? 6 : 12),
+                    y: yBase + 100,
                     transition: {
                       duration: 0.22,
                       ease: "easeIn",
@@ -119,10 +126,10 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                   transformOrigin: "bottom center",
                   zIndex: zIndex,
                 }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseEnter={() => !isMobile && setHoveredIndex(index)}
+                onMouseLeave={() => !isMobile && setHoveredIndex(null)}
                 onClick={() => onSelectProject(project)}
-                className={`absolute bottom-0 w-72 sm:w-80 md:w-88 lg:w-[21vw] max-w-[340px] h-[520px] sm:h-[560px] md:h-[620px] rounded-t-3xl cursor-pointer border-t border-x border-[#1A1A1A]/10 select-none transition-colors duration-200 flex flex-col justify-between overflow-hidden shadow-lg pb-28 md:pb-36 ${
+                className={`absolute bottom-0 w-[84vw] sm:w-80 md:w-88 lg:w-[21vw] max-w-[340px] h-[480px] sm:h-[540px] md:h-[620px] rounded-t-3xl cursor-pointer border-t border-x border-[#1A1A1A]/10 select-none transition-colors duration-200 flex flex-col justify-between overflow-hidden shadow-lg pb-24 sm:pb-28 md:pb-36 ${
                   isHovered
                     ? "bg-[#FFFDF9] border-[#00B2A9] shadow-2xl"
                     : "bg-[#FFFDF9]/95 hover:border-[#00B2A9]/40"
