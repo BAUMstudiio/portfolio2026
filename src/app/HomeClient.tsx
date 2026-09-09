@@ -214,19 +214,19 @@ export default function HomeClient({ projects }: { projects: ProjectData[] }) {
           </motion.nav>
         </div>
 
-        {/* Right Column: Profile Picture (Strict Perfect Circle Container) */}
-        <div className="hidden lg:flex items-center gap-4 shrink-0">
+        {/* Right Column: Profile Picture (Strict Perfect Circle Container - Enlarged & Cropped) */}
+        <div className="hidden md:flex items-center gap-4 shrink-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: hasScrolled ? 1 : 0, scale: hasScrolled ? 1 : 0.9 }}
             transition={{ duration: 0.8, delay: 0.45, ease: [0.76, 0, 0.24, 1] }}
-            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 border-2 border-[#1A1A1A]/10 shadow-sm bg-[#1A1A1A]/05 group"
+            className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden shrink-0 border-2 border-[#1A1A1A]/15 shadow-md bg-[#1A1A1A]/05 group"
           >
             <Image
-              src="/assets/PhotoDeProfil.webp"
+              src="/assets/PhotoDeProfil.png"
               alt="Matthieu Baudier"
               fill
-              sizes="80px"
+              sizes="(max-width: 768px) 96px, 128px"
               priority
               className="object-cover rounded-full group-hover:scale-105 transition-transform duration-500"
             />
