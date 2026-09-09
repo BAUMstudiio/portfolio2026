@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { formatImageUrl } from "./utils";
+
+export { formatImageUrl };
 
 export interface ProjectData {
   slug: string;
@@ -51,8 +54,8 @@ export function getAllProjects(): ProjectData[] {
         year: data.year || "",
         summary: data.summary || "",
         impactMetric: data.impactMetric || "",
-        coverImage: data.coverImage || "",
-        images: rawImages,
+        coverImage: formatImageUrl(data.coverImage),
+        images: rawImages.map((img: string) => formatImageUrl(img)),
         tags: Array.isArray(data.tags) ? data.tags : [],
         content: cleanContent,
       } as ProjectData;
@@ -65,3 +68,4 @@ export function getProjectBySlug(slug: string): ProjectData | null {
   const projects = getAllProjects();
   return projects.find((p) => p.slug === slug) || null;
 }
+

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, CheckCircle, Building2, ImageIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { ProjectData } from "@/lib/projects";
+import { formatImageUrl } from "@/lib/utils";
 import Image from "next/image";
 
 interface ProjectDetailModalProps {
@@ -162,13 +163,14 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                     },
                     img: ({ src, alt }) => {
                       if (!src) return null;
+                      const cleanSrc = formatImageUrl(src);
                       return (
                         <div
-                          onClick={() => setLightboxSrc(src)}
+                          onClick={() => setLightboxSrc(cleanSrc)}
                           className="relative w-full h-48 sm:h-72 md:h-[420px] my-4 sm:my-6 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 shadow-md cursor-zoom-in group"
                         >
                           <Image
-                            src={src}
+                            src={cleanSrc}
                             alt={alt || "Image d'illustration projet"}
                             fill
                             sizes="(max-width: 768px) 100vw, 800px"

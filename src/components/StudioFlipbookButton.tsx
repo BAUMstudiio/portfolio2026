@@ -4,21 +4,23 @@ import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useWindowSize } from "@/hooks/useWindowSize";
+import { formatImageUrl } from "@/lib/utils";
 
 const STUDIO_IMAGES = [
-  "/assets/images studio/Projet_Radaz_site_mockup.webp",
-  "/assets/images studio/Projet_APF_affiche_mockup.webp",
-  "/assets/images studio/Illustration_hug_hug.webp",
-  "/assets/images studio/Projet_custdome_bureautique_mockup.webp",
-  "/assets/images studio/Projet_LaDuele_Illustration_étiquette.webp",
-  "/assets/images studio/Projet_radaz_stickers_mockup.webp",
-  "/assets/images studio/Image_exemple_branding.webp",
-  "/assets/images studio/Projet_wow_fin_planche_mockup.webp",
-  "/assets/images studio/Projet_origin_conteneur_mockup.webp",
-  "/assets/images studio/Projet_APF_explication_logo.webp",
-  "/assets/images studio/Projet_XII_logo_fondblanc.webp",
-  "/assets/images studio/Projet_wow_logo_creme.webp",
+  formatImageUrl("/assets/images studio/Projet_Radaz_site_mockup.webp"),
+  formatImageUrl("/assets/images studio/Projet_APF_affiche_mockup.webp"),
+  formatImageUrl("/assets/images studio/Illustration_hug_hug.webp"),
+  formatImageUrl("/assets/images studio/Projet_custdome_bureautique_mockup.webp"),
+  formatImageUrl("/assets/images studio/Projet_LaDuele_Illustration_étiquette.webp"),
+  formatImageUrl("/assets/images studio/Projet_radaz_stickers_mockup.webp"),
+  formatImageUrl("/assets/images studio/Image_exemple_branding.webp"),
+  formatImageUrl("/assets/images studio/Projet_wow_fin_planche_mockup.webp"),
+  formatImageUrl("/assets/images studio/Projet_origin_conteneur_mockup.webp"),
+  formatImageUrl("/assets/images studio/Projet_APF_explication_logo.webp"),
+  formatImageUrl("/assets/images studio/Projet_XII_logo_fondblanc.webp"),
+  formatImageUrl("/assets/images studio/Projet_wow_logo_creme.webp"),
 ];
+
 
 export default function StudioFlipbookButton() {
   const [isHovered, setIsHovered] = useState(false);
