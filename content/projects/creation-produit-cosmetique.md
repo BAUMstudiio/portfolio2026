@@ -33,7 +33,6 @@ Créer un soin cosmétique masculin universel, instantané et éco-conçu brisan
 2. **Co-formulation cosmétique** : Élaboration de la formule avec une formulatrice spécialisée.
 3. **Packaging 3D & Go-To-Market** : Modélisation 3D sous Blender et plan de distribution.
 
-![Illustration](/assets/Marketing:Experience client/Création d’un produit cosmétique/PackshotPackaging.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Mix Marketing, Business Model Canvas, Éco-conception.

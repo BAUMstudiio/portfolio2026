@@ -35,7 +35,6 @@ Reconcevoir la proposition de valeur et structurer un nouveau concept commercial
 2. **Modèle Kano** : Priorisation des fonctionnalités et attentes clients.
 3. **Concept Vente Nomade** : Modélisation d'une boutique itinérante couplée au live-shopping digital.
 
-![Illustration](/assets/Marketing:Experience client/Repositionnement stratégique d’une marque de retail/ConceptDéveloppé.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Modèle Kano, Mix Marketing, Business Model Canvas.

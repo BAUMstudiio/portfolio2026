@@ -43,7 +43,6 @@ Application rigoureuse de la méthodologie du **Double Diamant** :
 3. **Develop** : Co-conception d’un cockpit web unifié et prototypage d’un assistant conversationnel RAG spécialisé dans les bases documentaires Renault.
 4. **Deliver** : Déploiement itératif du cockpit manager et de l'interface collaborateur adaptative.
 
-![Illustration](/assets/Product management & Tech/Produit Onboarding/Bench&VisionProduct.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks & Méthodologies** : Double Diamant, Product Discovery, Agile Scrum, Design Thinking.

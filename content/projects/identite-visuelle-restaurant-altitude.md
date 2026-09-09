@@ -35,7 +35,6 @@ Créer un univers visuel fort, contemporain et ancré dans le patrimoine alpin p
 2. **Conception logotypique** : Création d'un système visuel modulable.
 3. **Supports physiques & signalétique** : Cartes menus, textile du personnel et habillage de l'établissement.
 
-![Illustration](/assets/Design & Création/Identité visuelle d’un restaurant d’altitude/MappingConcurrentRadaz.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Brand Identity, Tone of Voice, Art Direction.

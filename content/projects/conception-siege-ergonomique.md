@@ -42,7 +42,6 @@ Développer une solution d'assise nomade, modulaire et ultra-résistante permett
 3. **Prototypage rapide au Fablab** : Maquettes d'étude basse et haute fidélité (découpe laser, impression 3D, assemblage aluminium).
 4. **Tests terrain** : Essais d'usage réels sur chantiers avec évaluation ergonomique comparative.
 
-![Illustration](/assets/Product management & Tech/Conception d’un siège ergonomique/EsquisseFauteil.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : TRIZ, Design Thinking, Ergonomie Industrielle, Analyse des Matériaux.

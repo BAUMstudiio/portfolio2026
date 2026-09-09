@@ -32,7 +32,6 @@ Proposer une immersion VR permettant au futur propriétaire de s'approprier son 
 2. **Génération IA d'assets** : Storyboarding assisté par IA générative.
 3. **Pistes de Motion Design** : Formalisation des intentions de design d'interface VR.
 
-![Illustration](/assets/Marketing:Experience client/Création d’une expérience virtuelle/Expérience1.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Creative Direction, Storyboarding VR, Prompt Engineering.

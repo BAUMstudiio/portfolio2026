@@ -42,7 +42,6 @@ Créer un univers graphique ludique et accessible tout en assurant le suivi tech
 2. **Création vectorielle** : Illustration de 200 cartes thématiques, plateau rigide et packaging.
 3. **Suivi d'impression** : Bon à tirer et contrôle qualité avec l'imprimeur.
 
-![Illustration](/assets/Design & Création/Direction artistique jeu de société/CarteBonus.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Direction Artistique, Design Système Print, Suivi de Fabrication.

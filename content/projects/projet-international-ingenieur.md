@@ -42,7 +42,6 @@ Concevoir et fabriquer un module d'irrigation et de régulation d'eau 100% passi
 3. **Prototypage Fablab** : Conception CAD et fabrication du prototype d'irrigation (impression 3D, thermoformage, découpe laser).
 4. **Branding du projet** : Création de la marque Custdome (posters, identité visuelle, stickers).
 
-![Illustration](/assets/Product management & Tech/Projet international ingénieure/AssetsBranding.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Design Thinking, Systemic Engineering, Analyse de Faisabilité.

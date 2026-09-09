@@ -35,7 +35,6 @@ Instaurer une ligne d'expérience produit homogène et unifiée pour soutenir l'
 2. **User Journey Maps** : Cartographie des points de friction multi-produits.
 3. **Charte CX & Tone of Voice** : Rédaction des UX Briefs de référence.
 
-![Illustration](/assets/Marketing:Experience client/Stratégie expérientielle autour de produits d’onboarding/InterfaceApplicationAR.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : CX Benchmarking, User Journey Mapping, Tone of Voice.

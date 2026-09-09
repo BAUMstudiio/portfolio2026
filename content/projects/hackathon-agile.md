@@ -38,7 +38,6 @@ Créer une plateforme SaaS unifiée retranscrivant en un coup d’œil l'ensembl
 2. **Prototypage rapide** : Conception des flux d'écran sur Figma et développement accéléré via Lovable.
 3. **Algorithme de Scoring** : Structuration d'un modèle d'évaluation de zone agrégeant prix foncier, attractivité salariale et réseaux hydriques.
 
-![Illustration](/assets/Product management & Tech/Hackathon Agile/ComparatifApplication2.webp)
 
 ## 4. Stack, Frameworks & Outils
 - **Frameworks** : Agile Scrum, Product Discovery, User Journey Mapping.
