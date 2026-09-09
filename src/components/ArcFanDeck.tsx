@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProjectData } from "@/lib/projects";
 import Image from "next/image";
@@ -15,6 +15,14 @@ interface ArcFanDeckProps {
 export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: ArcFanDeckProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { isMobile } = useWindowSize();
+
+  // Mobile 3D Stack Deck state
+  const [deckList, setDeckList] = useState<ProjectData[]>(projects);
+
+  // Sync deckList when category changes or projects prop changes
+  useEffect(() => {
+    setDeckList(projects);
+  }, [projects, activeDomain]);
 
   const total = projects.length;
   const middleIndex = (total - 1) / 2;
@@ -37,21 +45,29 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
   };
 
   // ---------------------------------------------------------------------------
-  // MOBILE LAYOUT (< 768px): Clean 2-Column Grid (No arc formulas / no overflow)
+  // MOBILE LAYOUT (< 768px): Airy 3D Stacked Deck (Purified Minimalist Swipe)
   // ---------------------------------------------------------------------------
   if (isMobile) {
+    const cycleNextCard = () => {
+      setDeckList((prev) => (prev.length > 1 ? [...prev.slice(1), prev[0]] : prev));
+    };
+
     return (
-      <div className="w-full max-w-xl mx-auto px-1 py-2 overflow-y-auto no-scrollbar pointer-events-auto max-h-[62vh] pb-16">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeDomain}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.28 }}
-            className="grid grid-cols-2 gap-3 sm:gap-4 w-full"
-          >
-            {projects.map((project) => {
+      <div className="w-full max-w-sm mx-auto px-4 pt-16 pb-8 flex flex-col items-center justify-center pointer-events-auto relative select-none">
+        
+        {/* 3D Card Stack Container with Airy Vertical Protrusion */}
+        <div className="relative w-full h-[470px] flex items-center justify-center">
+          <AnimatePresence>
+            {deckList.slice(0, 3).map((project, idx) => {
+              const isTop = idx === 0;
+
+              // Airy Stack offsets: cards 1 & 2 protrude significantly upwards (-48px and -96px)
+              const scale = isTop ? 1 : idx === 1 ? 0.94 : 0.88;
+              const yOffset = isTop ? 0 : idx === 1 ? -48 : -96;
+              const zIndex = isTop ? 30 : idx === 1 ? 20 : 10;
+              const opacity = isTop ? 1 : idx === 1 ? 0.95 : 0.85;
+              const rotation = isTop ? 0 : idx === 1 ? -3 : 3;
+
               const tagBg =
                 project.slug.includes("solisseo")
                   ? "bg-[#FF5A5F]/15 text-[#FF5A5F] border-[#FF5A5F]/20"
@@ -62,52 +78,102 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
               return (
                 <motion.div
                   key={project.slug}
+                  layout
                   layoutId={`project-card-${project.slug}`}
-                  onClick={() => onSelectProject(project)}
-                  whileTap={{ scale: 0.96 }}
-                  className="relative w-full aspect-[3/4] rounded-2xl border border-[#1A1A1A]/10 bg-[#FFFDF9] cursor-pointer select-none flex flex-col justify-between overflow-hidden shadow-md p-3 group transition-all duration-200"
+                  initial={{ scale: 0.8, y: -80, opacity: 0 }}
+                  animate={{
+                    scale,
+                    y: yOffset,
+                    opacity,
+                    rotate: rotation,
+                  }}
+                  exit={{
+                    x: 320,
+                    opacity: 0,
+                    rotate: 22,
+                    transition: { duration: 0.24 },
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 280,
+                    damping: 25,
+                  }}
+                  style={{
+                    zIndex,
+                    position: "absolute",
+                  }}
+                  drag={isTop ? "x" : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.65}
+                  onDragEnd={(e, info) => {
+                    if (!isTop) return;
+                    if (
+                      Math.abs(info.offset.x) > 90 ||
+                      Math.abs(info.velocity.x) > 350
+                    ) {
+                      cycleNextCard();
+                    } else if (
+                      Math.abs(info.offset.x) < 8 &&
+                      Math.abs(info.offset.y) < 8
+                    ) {
+                      onSelectProject(project);
+                    }
+                  }}
+                  onClick={() => {
+                    if (isTop) {
+                      onSelectProject(project);
+                    }
+                  }}
+                  className={`w-[86vw] max-w-[330px] h-[410px] sm:h-[430px] rounded-3xl bg-[#FFFDF9] border border-[#1A1A1A]/12 shadow-xl p-4 flex flex-col justify-between cursor-grab active:cursor-grabbing overflow-hidden ${
+                    isTop ? "touch-pan-y" : "pointer-events-none"
+                  }`}
                 >
-                  {/* Upper Half: Visual Image */}
+                  {/* Visual Header */}
                   {project.coverImage ? (
-                    <div className="relative w-full h-28 sm:h-32 rounded-xl overflow-hidden bg-[#1A1A1A]/5 shrink-0 border border-[#1A1A1A]/06">
+                    <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-[#1A1A1A]/5 shrink-0 border border-[#1A1A1A]/06">
                       <Image
                         src={project.coverImage}
                         alt={project.title}
                         fill
-                        sizes="240px"
+                        sizes="320px"
                         className="object-cover"
+                        priority={isTop}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#FFFDF9] via-transparent to-transparent opacity-60" />
                     </div>
                   ) : (
-                    <div className="w-full h-24 bg-[#1A1A1A]/5 rounded-xl shrink-0 flex items-center justify-center font-display font-bold text-base text-[#717171]">
+                    <div className="w-full h-40 bg-[#1A1A1A]/5 rounded-2xl shrink-0 flex items-center justify-center font-display font-bold text-xl text-[#717171]">
                       {project.title.substring(0, 2)}
                     </div>
                   )}
 
-                  {/* Lower Half: Role & Title */}
-                  <div className="flex-1 flex flex-col justify-between pt-2">
+                  {/* Card Content - Pure & Épuré (No parasite text) */}
+                  <div className="flex-1 flex flex-col justify-between pt-3">
                     <div>
-                      <span className="font-body text-[10px] text-[#00B2A9] font-bold uppercase tracking-wider block mb-0.5 truncate">
+                      <span className="font-body text-xs text-[#00B2A9] font-bold uppercase tracking-wider block mb-1">
                         {project.role}
                       </span>
-                      <h3 className="font-display font-bold text-xs sm:text-sm text-[#1A1A1A] tracking-tight leading-snug line-clamp-2">
+                      <h3 className="font-display font-bold text-base text-[#1A1A1A] tracking-tight leading-tight mb-1 line-clamp-2">
                         {project.title}
                       </h3>
+                      <p className="font-body text-xs text-[#5A5A5A] line-clamp-2 leading-relaxed">
+                        {project.summary}
+                      </p>
                     </div>
 
-                    <div className="pt-1.5 border-t border-[#1A1A1A]/[0.06] flex items-center justify-between font-body text-[10px] mt-1">
-                      <span className={`font-body text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full border truncate max-w-[80%] ${tagBg}`}>
+                    <div className="pt-2 border-t border-[#1A1A1A]/[0.08] flex items-center justify-between font-body text-xs">
+                      <span className={`font-body text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${tagBg}`}>
                         {project.tags[0] || project.year}
                       </span>
-                      <span className="text-[#00B2A9] font-bold text-xs">→</span>
+                      <span className="text-[#00B2A9] font-bold text-sm">→</span>
                     </div>
                   </div>
                 </motion.div>
               );
             })}
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
+
       </div>
     );
   }
@@ -267,4 +333,5 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
     </div>
   );
 }
+
 
