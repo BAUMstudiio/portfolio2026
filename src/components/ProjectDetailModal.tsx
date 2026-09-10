@@ -14,14 +14,14 @@ interface ProjectDetailModalProps {
 }
 
 export default function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps) {
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxItem, setLightboxItem] = useState<{ url: string; caption?: string } | null>(null);
 
   // Lock body scroll on open & bind ESC key (closes lightbox first if open, else closes modal)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (lightboxSrc) {
-          setLightboxSrc(null);
+        if (lightboxItem) {
+          setLightboxItem(null);
         } else {
           onClose();
         }
@@ -37,12 +37,12 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [project, lightboxSrc, onClose]);
+  }, [project, lightboxItem, onClose]);
 
   return (
     <AnimatePresence>
       {project && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 md:p-10">
+        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-6 md:p-10">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -88,11 +88,11 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
               {/* Cover Banner Image if available */}
               {project.coverImage && (
                 <div
-                  onClick={() => setLightboxSrc(project.coverImage!)}
+                  onClick={() => setLightboxItem({ url: formatImageUrl(project.coverImage!), caption: project.title })}
                   className="relative w-full h-48 sm:h-72 md:h-96 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 cursor-zoom-in group"
                 >
                   <Image
-                    src={project.coverImage}
+                    src={formatImageUrl(project.coverImage)}
                     alt={project.title}
                     fill
                     className="object-cover group-hover:scale-102 transition-transform duration-300"
@@ -164,24 +164,33 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                     img: ({ src, alt }) => {
                       if (!src) return null;
                       const cleanSrc = formatImageUrl(src);
+                      const captionText = alt && alt !== "Image d'illustration projet" && alt !== "Illustration" ? alt : "";
+
                       return (
-                        <div
-                          onClick={() => setLightboxSrc(cleanSrc)}
-                          className="relative w-full h-48 sm:h-72 md:h-[420px] my-4 sm:my-6 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 shadow-md cursor-zoom-in group"
-                        >
-                          <Image
-                            src={cleanSrc}
-                            alt={alt || "Image d'illustration projet"}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 800px"
-                            className="object-cover group-hover:scale-102 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors flex items-center justify-center">
-                            <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
-                              🔍 Cliquez pour agrandir
-                            </span>
+                        <figure className="my-6 sm:my-8 w-full flex flex-col items-center">
+                          <div
+                            onClick={() => setLightboxItem({ url: cleanSrc, caption: captionText })}
+                            className="relative w-full h-48 sm:h-72 md:h-[420px] rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 shadow-md cursor-zoom-in group"
+                          >
+                            <Image
+                              src={cleanSrc}
+                              alt={alt || "Image d'illustration projet"}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 800px"
+                              className="object-cover group-hover:scale-102 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors flex items-center justify-center">
+                              <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
+                                🔍 Cliquez pour agrandir
+                              </span>
+                            </div>
                           </div>
-                        </div>
+                          {captionText && (
+                            <figcaption className="font-body text-xs sm:text-sm text-stone-500/80 italic text-center mt-2.5 px-4">
+                              — {captionText}
+                            </figcaption>
+                          )}
+                        </figure>
                       );
                     },
                     ul: ({ children }) => (
@@ -223,7 +232,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                 </div>
               </div>
 
-              {/* Section 6: La Galerie Visuelle (1 single column on mobile grid-cols-1) */}
+              {/* Section 6: La Galerie Visuelle avec légendes (figure & figcaption) */}
               {project.images && project.images.length > 0 && (
                 <div className="pt-6 sm:pt-8 border-t border-[#1A1A1A]/[0.08] space-y-4 sm:space-y-6">
                   <div className="flex items-center gap-2 font-display font-bold text-lg sm:text-xl text-[#1A1A1A]">
@@ -231,27 +240,37 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                     <span>6. La Galerie Visuelle ({project.images.length})</span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {project.images.map((imgSrc, idx) => (
-                      <div
-                        key={idx}
-                        onClick={() => setLightboxSrc(imgSrc)}
-                        className="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 aspect-video shadow-sm cursor-zoom-in"
-                      >
-                        <Image
-                          src={imgSrc}
-                          alt={`${project.title} - Visuel ${idx + 1}`}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 500px"
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                          <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
-                            🔍 Agrandir
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    {project.images.map((image, idx) => {
+                      const cleanSrc = formatImageUrl(image.url);
+
+                      return (
+                        <figure key={idx} className="group flex flex-col">
+                          <div
+                            onClick={() => setLightboxItem({ url: cleanSrc, caption: image.caption })}
+                            className="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 aspect-video shadow-sm cursor-zoom-in"
+                          >
+                            <Image
+                              src={cleanSrc}
+                              alt={image.caption || `${project.title} - Visuel ${idx + 1}`}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 500px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                              <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
+                                🔍 Agrandir
+                              </span>
+                            </div>
+                          </div>
+                          {image.caption && (
+                            <figcaption className="text-sm text-stone-500/80 italic text-center mt-3">
+                              {image.caption}
+                            </figcaption>
+                          )}
+                        </figure>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -273,21 +292,21 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
 
           </motion.div>
 
-          {/* Fullscreen Lightbox Modal */}
+          {/* Fullscreen Lightbox Modal with Caption at bottom */}
           <AnimatePresence>
-            {lightboxSrc && (
+            {lightboxItem && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.22 }}
-                onClick={() => setLightboxSrc(null)}
-                className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 cursor-zoom-out select-none"
+                onClick={() => setLightboxItem(null)}
+                className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 cursor-zoom-out select-none"
               >
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setLightboxSrc(null);
+                    setLightboxItem(null);
                   }}
                   className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors"
                   aria-label="Fermer le zoom"
@@ -300,12 +319,12 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.94, opacity: 0 }}
                   transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                  className="relative max-w-6xl max-h-[88vh] w-full h-full flex items-center justify-center pointer-events-none"
+                  className="relative max-w-6xl max-h-[82vh] w-full h-full flex items-center justify-center pointer-events-none"
                 >
                   <div className="relative w-full h-full">
                     <Image
-                      src={lightboxSrc}
-                      alt="Vue agrandie"
+                      src={lightboxItem.url}
+                      alt={lightboxItem.caption || "Vue agrandie"}
                       fill
                       sizes="100vw"
                       className="object-contain"
@@ -313,6 +332,14 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                     />
                   </div>
                 </motion.div>
+
+                {lightboxItem.caption && (
+                  <div className="absolute bottom-6 left-0 right-0 z-10 text-center max-w-3xl mx-auto px-6 pointer-events-none">
+                    <p className="font-body text-sm sm:text-base text-white italic font-medium drop-shadow-md">
+                      {lightboxItem.caption}
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

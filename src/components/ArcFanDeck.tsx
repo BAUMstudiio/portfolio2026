@@ -147,16 +147,16 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                     </div>
                   )}
 
-                  {/* Card Content - Pure & Épuré (No parasite text) */}
+                  {/* Card Content - Pure & Épuré (Complete description without line-clamp truncation) */}
                   <div className="flex-1 flex flex-col justify-between pt-3">
                     <div>
                       <span className="font-body text-xs text-[#00B2A9] font-bold uppercase tracking-wider block mb-1">
                         {project.role}
                       </span>
-                      <h3 className="font-display font-bold text-base text-[#1A1A1A] tracking-tight leading-tight mb-1 line-clamp-2">
+                      <h3 className="font-display font-bold text-base text-[#1A1A1A] tracking-tight leading-tight mb-1">
                         {project.title}
                       </h3>
-                      <p className="font-body text-xs text-[#5A5A5A] line-clamp-2 leading-relaxed">
+                      <p className="font-body text-xs text-[#5A5A5A] leading-relaxed">
                         {project.summary}
                       </p>
                     </div>
@@ -292,7 +292,7 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                   </div>
                 )}
 
-                {/* Lower Half: Card Content */}
+                {/* Lower Half: Card Content - Complete description without truncation */}
                 <div className="p-6 pt-3 flex-1 flex flex-col justify-between">
                   <div>
                     <span className="font-body text-xs text-[#00B2A9] font-bold uppercase tracking-wider block mb-1">
@@ -303,7 +303,7 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                       {project.title}
                     </h3>
 
-                    <p className="font-body text-xs text-[#5A5A5A] leading-relaxed line-clamp-2">
+                    <p className="font-body text-xs text-[#5A5A5A] leading-relaxed">
                       {project.summary}
                     </p>
                   </div>
