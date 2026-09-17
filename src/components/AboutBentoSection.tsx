@@ -276,7 +276,7 @@ function GreenBeltMatterPhysics() {
     const parent = container.parentElement;
 
     const width = container.clientWidth || parent?.clientWidth || 180;
-    const height = Math.max(container.clientHeight, parent?.clientHeight || 0, 220);
+    const height = container.clientHeight || parent?.clientHeight || 220;
     const topLimitY = 56; // Barrière invisible pour s'arrêter juste sous le titre Green Belt
 
     // 1. Initialisation du moteur Matter.js

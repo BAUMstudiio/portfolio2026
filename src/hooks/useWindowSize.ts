@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 export function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
-    width: typeof window !== "undefined" ? window.innerWidth : 1200,
-    height: typeof window !== "undefined" ? window.innerHeight : 800,
-    isMobile: typeof window !== "undefined" ? window.innerWidth < 768 : false,
+    width: 1200,
+    height: 800,
+    isMobile: false,
   });
 
   useEffect(() => {

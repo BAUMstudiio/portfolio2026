@@ -67,7 +67,9 @@ function AutonomousDisappearingWaveCanvas({ isEasterEggActive }: AutonomousDisap
         ctx.scale(dpr, dpr);
       }
 
-      const spacing = 22; // Denser grid for better color field effect
+      // Moins dense sur mobile pour préserver les performances
+      const isMobile = w < 768;
+      const spacing = isMobile ? 34 : 22; 
       const cols = Math.ceil(w / spacing);
       const rows = Math.ceil(h / spacing);
       const dots: CanvasDot[] = [];
@@ -280,7 +282,7 @@ export default function HeroSection() {
 
         {/* Grand Titre */}
         <h1
-          className="font-medium text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4.2rem] leading-none text-[#00B2A9] mt-6 mb-8 whitespace-nowrap text-left filter drop-shadow-xs"
+          className="font-medium text-[clamp(2.2rem,6vw,4.2rem)] leading-[1.1] text-[#00B2A9] mt-6 mb-8 text-left filter drop-shadow-xs text-balance"
           style={{ fontFamily: CLASH_FONT, fontWeight: 500 }}
         >
           {t("profile_title")}

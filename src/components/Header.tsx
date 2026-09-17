@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import Image from "next/image";
+import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Header() {
   const [isPastHero, setIsPastHero] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { lang, toggleLang, t } = useLanguage();
   const headerRef = useRef<HTMLDivElement>(null);
@@ -70,8 +72,21 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   // Défilement fluide vers une section au clic
   const scrollToSection = (id: string) => {
+    setIsMenuOpen(false); // Ferme le menu mobile au clic
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
@@ -116,8 +131,8 @@ export default function Header() {
           )}
         </AnimatePresence>
 
-        {/* Liens de Catégories avec Indicateur Bleu pour la Section Active */}
-        <nav className="flex items-center gap-1 sm:gap-2">
+        {/* Liens de Catégories avec Indicateur Bleu pour la Section Active (Desktop Only) */}
+        <nav className="hidden sm:flex items-center gap-1 sm:gap-2">
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -144,9 +159,19 @@ export default function Header() {
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-body font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
           >
             <span className="text-sm">{lang === "fr" ? "🇬🇧" : "🇫🇷"}</span>
-            <span className="text-[11px] font-mono font-bold tracking-wider text-slate-800 dark:text-slate-100 uppercase">
+            <span className="text-[11px] font-mono font-bold tracking-wider text-slate-800 dark:text-slate-100 uppercase hidden sm:block">
               {lang === "fr" ? "EN" : "FR"}
             </span>
+          </button>
+        </div>
+
+        {/* Bouton Hamburger Menu (Mobile Only) */}
+        <div className="flex sm:hidden items-center pl-1">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-1.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </motion.header>
@@ -180,6 +205,55 @@ export default function Header() {
               <span className="font-body text-xs font-semibold text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
                 {t("profile_status")}
               </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Menu Burger Dropdown (Mobile) */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+            className="absolute top-[calc(100%+12px)] z-[60] bg-white/80 dark:bg-black/70 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 shadow-2xl rounded-3xl p-6 sm:hidden pointer-events-auto flex flex-col items-center w-[90%] max-w-[320px]"
+          >
+            {/* Liens de navigation */}
+            <nav className="flex flex-col items-center gap-6 w-full">
+              {NAV_ITEMS.map((item, i) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <motion.button
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`text-xl font-display tracking-tight transition-colors py-1.5 w-full text-center ${
+                      isActive
+                        ? "font-bold text-[#00B2A9]"
+                        : "font-medium text-slate-800 dark:text-slate-200 hover:text-[#00B2A9]"
+                    }`}
+                  >
+                    {item.label}
+                  </motion.button>
+                );
+              })}
+            </nav>
+
+            {/* Infos Profile en bas du menu */}
+            <div className="mt-8 pt-4 border-t border-slate-200/50 dark:border-white/10 w-full flex justify-center">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200/50 dark:border-emerald-800/50">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="font-body text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                  {t("profile_status")}
+                </span>
+              </div>
             </div>
           </motion.div>
         )}

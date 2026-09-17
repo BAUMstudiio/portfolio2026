@@ -188,7 +188,7 @@ export default function ArcFanDeck({ projects, activeDomain, onSelectProject }: 
                       <h3 className="font-display font-semibold text-base text-[#1A1A1A] dark:text-slate-100 tracking-tight leading-tight mb-1">
                         {project.title}
                       </h3>
-                      <p className="font-body text-xs text-[#5A5A5A] dark:text-slate-300 leading-relaxed">
+                      <p className="font-body text-xs text-[#5A5A5A] dark:text-slate-300 leading-relaxed line-clamp-3">
                         {project.summary}
                       </p>
                     </div>

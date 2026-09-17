@@ -256,7 +256,7 @@ export default function ExpertiseSection() {
         </h2>
 
         {/* Pills Grid Aligné à Gauche */}
-        <div className="flex flex-wrap justify-start gap-2.5 sm:gap-3 w-full max-w-6xl">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap justify-start gap-2.5 sm:gap-3 w-full max-w-6xl">
           {STACK_ITEMS.map((item, idx) => (
             <motion.div
               key={idx}
@@ -274,7 +274,7 @@ export default function ExpertiseSection() {
                   className="w-4 sm:w-5 h-4 sm:h-5 object-contain shrink-0"
                 />
               </div>
-              <span className="text-xs sm:text-sm font-body font-semibold text-slate-800 dark:text-slate-200 group-hover:text-[#00B2A9] transition-colors">
+              <span className="text-xs sm:text-sm font-body font-semibold text-slate-800 dark:text-slate-200 group-hover:text-[#00B2A9] transition-colors truncate">
                 {item.name}
               </span>
             </motion.div>
