@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { ProjectData } from "@/lib/projects";
 import { formatImageUrl } from "@/lib/utils";
 import Image from "next/image";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ProjectDetailModalProps {
   project: ProjectData | null;
@@ -14,7 +15,14 @@ interface ProjectDetailModalProps {
 }
 
 export default function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps) {
+  const { lang, translate } = useLanguage();
   const [lightboxItem, setLightboxItem] = useState<{ url: string; caption?: string } | null>(null);
+
+  const domainLabels: Record<string, { fr: string; en: string }> = {
+    "Product Management & Tech": { fr: "Product Management & Tech", en: "Product Management & Tech" },
+    "Stratégie & Expérience Client": { fr: "Stratégie & Expérience Client", en: "Strategy & Customer Experience" },
+    "Direction Artistique & Design": { fr: "Direction Artistique & Design", en: "Art Direction & Design" },
+  };
 
   // Lock body scroll on open & bind ESC key (closes lightbox first if open, else closes modal)
   useEffect(() => {
@@ -39,6 +47,14 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
     };
   }, [project, lightboxItem, onClose]);
 
+  const domainText = project
+    ? domainLabels[project.domain]
+      ? lang === "en"
+        ? domainLabels[project.domain].en
+        : domainLabels[project.domain].fr
+      : project.domain
+    : "";
+
   return (
     <AnimatePresence>
       {project && (
@@ -57,27 +73,29 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
           <motion.div
             layoutId={`project-card-${project.slug}`}
             transition={{ type: "spring", stiffness: 280, damping: 28 }}
-            className="relative w-full max-w-4xl bg-[#F0EBE1] border border-[#1A1A1A]/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 my-auto max-h-[92vh] flex flex-col justify-between"
+            className="relative w-full max-w-4xl bg-[#F0EBE1] dark:bg-[#0F172A] border border-[#1A1A1A]/10 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 my-auto max-h-[92vh] flex flex-col justify-between transition-colors duration-500"
           >
             {/* Top Bar with Minimalist Close Button */}
-            <div className="sticky top-0 z-20 bg-[#F0EBE1]/95 backdrop-blur-md px-4 sm:px-8 py-3.5 sm:py-5 border-b border-[#1A1A1A]/[0.08] flex items-center justify-between">
+            <div className="sticky top-0 z-20 bg-[#F0EBE1]/95 dark:bg-[#0F172A]/95 backdrop-blur-md px-4 sm:px-8 py-3.5 sm:py-5 border-b border-[#1A1A1A]/[0.08] dark:border-slate-800 flex items-center justify-between transition-colors duration-500">
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="font-body text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full bg-[#00B2A9]/10 text-[#00B2A9] uppercase tracking-wider border border-[#00B2A9]/20 whitespace-nowrap">
-                  {project.domain}
+                  {domainText}
                 </span>
-                <span className="font-body text-xs text-[#5A5A5A] hidden sm:inline">
+                <span className="font-body text-xs text-[#5A5A5A] dark:text-slate-400 hidden sm:inline">
                   {project.context} — {project.year}
                 </span>
               </div>
 
               <button
                 onClick={onClose}
-                className="group flex items-center gap-1.5 sm:gap-2 font-body text-xs text-[#1A1A1A] hover:text-[#00B2A9] transition-colors"
-                aria-label="Fermer la vue détaillée"
+                className="group flex items-center gap-1.5 sm:gap-2 font-body text-xs text-[#1A1A1A] dark:text-slate-200 hover:text-[#00B2A9] dark:hover:text-[#00B2A9] transition-colors cursor-pointer"
+                aria-label={translate("Fermer la vue détaillée", "Close detailed view")}
               >
-                <span className="uppercase tracking-widest text-[10px] sm:text-[11px] font-bold">Fermer</span>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1A1A1A]/[0.05] group-hover:bg-[#00B2A9]/10 flex items-center justify-center transition-colors">
-                  <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1A1A1A] group-hover:text-[#00B2A9]" />
+                <span className="uppercase tracking-widest text-[10px] sm:text-[11px] font-bold">
+                  {translate("Fermer", "Close")}
+                </span>
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1A1A1A]/[0.05] dark:bg-slate-800 group-hover:bg-[#00B2A9]/10 flex items-center justify-center transition-colors">
+                  <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1A1A1A] dark:text-slate-200 group-hover:text-[#00B2A9]" />
                 </div>
               </button>
             </div>
@@ -89,7 +107,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
               {project.coverImage && (
                 <div
                   onClick={() => setLightboxItem({ url: formatImageUrl(project.coverImage!), caption: project.title })}
-                  className="relative w-full h-48 sm:h-72 md:h-96 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 border border-[#1A1A1A]/08 cursor-zoom-in group"
+                  className="relative w-full h-48 sm:h-72 md:h-96 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1A1A1A]/5 dark:bg-slate-800 border border-[#1A1A1A]/08 dark:border-slate-800 cursor-zoom-in group"
                 >
                   <Image
                     src={formatImageUrl(project.coverImage)}
@@ -99,15 +117,15 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors flex items-center justify-center">
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
-                      🔍 Cliquez pour agrandir
+                      {translate("🔍 Cliquez pour agrandir", "🔍 Click to zoom")}
                     </span>
                   </div>
                 </div>
               )}
 
               {/* Header Title & Role */}
-              <div className="space-y-3 sm:space-y-4 border-b border-[#1A1A1A]/[0.08] pb-5 sm:pb-8">
-                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[11px] sm:text-xs font-body text-[#5A5A5A] uppercase tracking-wider">
+              <div className="space-y-3 sm:space-y-4 border-b border-[#1A1A1A]/[0.08] dark:border-slate-800 pb-5 sm:pb-8">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[11px] sm:text-xs font-body text-[#5A5A5A] dark:text-slate-400 uppercase tracking-wider">
                   <span className="flex items-center gap-1.5 text-[#00B2A9] font-bold">
                     <Building2 className="w-3.5 h-3.5" />
                     {project.role}
@@ -118,33 +136,33 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                   <span>{project.year}</span>
                 </div>
 
-                <h1 className="font-display font-bold text-2xl sm:text-4xl md:text-6xl text-[#1A1A1A] tracking-tight leading-tight">
+                <h1 className="font-display font-semibold text-2xl sm:text-4xl md:text-6xl text-[#1A1A1A] dark:text-slate-100 tracking-tight leading-tight">
                   {project.title}
                 </h1>
 
                 {project.impactMetric && (
                   <div className="inline-block font-body text-[11px] sm:text-xs font-bold uppercase tracking-wider px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#00B2A9]/10 text-[#00B2A9] border border-[#00B2A9]/20">
-                    Impact : {project.impactMetric}
+                    {translate("Impact : ", "Impact: ")}{project.impactMetric}
                   </div>
                 )}
               </div>
 
               {/* Main Markdown Content formatted in the 6 mandatory sections */}
-              <div className="prose prose-lg max-w-none text-[#1A1A1A] font-body leading-relaxed space-y-6 sm:space-y-8">
+              <div className="prose prose-lg max-w-none text-[#1A1A1A] dark:text-slate-100 font-body leading-relaxed space-y-6 sm:space-y-8">
                 <ReactMarkdown
                   components={{
                     h1: ({ children }) => (
-                      <h2 className="font-display font-bold text-xl sm:text-2xl md:text-3xl text-[#1A1A1A] pt-4 sm:pt-6 pb-2 border-b border-[#1A1A1A]/[0.08]">
+                      <h2 className="font-display font-bold text-xl sm:text-2xl md:text-3xl text-[#1A1A1A] dark:text-slate-100 pt-4 sm:pt-6 pb-2 border-b border-[#1A1A1A]/[0.08] dark:border-slate-800">
                         {children}
                       </h2>
                     ),
                     h2: ({ children }) => (
-                      <h3 className="font-display font-bold text-lg sm:text-xl md:text-2xl text-[#1A1A1A] pt-3 sm:pt-4 pb-2 text-[#00B2A9]">
+                      <h3 className="font-display font-bold text-lg sm:text-xl md:text-2xl text-[#00B2A9] pt-3 sm:pt-4 pb-2">
                         {children}
                       </h3>
                     ),
                     h3: ({ children }) => (
-                      <h4 className="font-display font-bold text-base sm:text-lg text-[#1A1A1A] pt-2 sm:pt-3 pb-1">
+                      <h4 className="font-display font-bold text-base sm:text-lg text-[#1A1A1A] dark:text-slate-100 pt-2 sm:pt-3 pb-1">
                         {children}
                       </h4>
                     ),
@@ -156,7 +174,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                         return <div className="my-4 sm:my-6">{children}</div>;
                       }
                       return (
-                        <p className="text-[#1A1A1A] text-sm sm:text-base md:text-lg leading-relaxed font-body">
+                        <p className="text-[#1A1A1A] dark:text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed font-body">
                           {children}
                         </p>
                       );
@@ -181,12 +199,12 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors flex items-center justify-center">
                               <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
-                                🔍 Cliquez pour agrandir
+                                {translate("🔍 Cliquez pour agrandir", "🔍 Click to zoom")}
                               </span>
                             </div>
                           </div>
                           {captionText && (
-                            <figcaption className="font-body text-xs sm:text-sm text-stone-500/80 italic text-center mt-2.5 px-4">
+                            <figcaption className="font-body text-xs sm:text-sm text-stone-500/80 dark:text-stone-400 italic text-center mt-2.5 px-4">
                               — {captionText}
                             </figcaption>
                           )}
@@ -199,13 +217,13 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                       </ul>
                     ),
                     li: ({ children }) => (
-                      <li className="flex items-start gap-2.5 sm:gap-3 text-sm sm:text-base text-[#1A1A1A] font-body">
+                      <li className="flex items-start gap-2.5 sm:gap-3 text-sm sm:text-base text-[#1A1A1A] dark:text-slate-300 font-body">
                         <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00B2A9] shrink-0 mt-1" />
                         <span>{children}</span>
                       </li>
                     ),
                     strong: ({ children }) => (
-                      <strong className="font-bold text-[#1A1A1A]">
+                      <strong className="font-bold text-[#1A1A1A] dark:text-slate-100">
                         {children}
                       </strong>
                     ),
@@ -216,15 +234,15 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
               </div>
 
               {/* Section 4: Stack & Outils Tags */}
-              <div className="pt-6 sm:pt-8 border-t border-[#1A1A1A]/[0.08] space-y-3">
-                <span className="font-display font-bold text-sm sm:text-base text-[#1A1A1A] block">
-                  4. Stack, Frameworks & Outils
+              <div className="pt-6 sm:pt-8 border-t border-[#1A1A1A]/[0.08] dark:border-slate-800 space-y-3">
+                <span className="font-display font-bold text-sm sm:text-base text-[#1A1A1A] dark:text-slate-100 block">
+                  {translate("4. Stack, Frameworks & Outils", "4. Stack, Frameworks & Tools")}
                 </span>
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="font-body text-[10px] sm:text-xs uppercase tracking-widest px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white text-[#1A1A1A] border border-[#1A1A1A]/10 font-bold"
+                      className="font-body text-[10px] sm:text-xs uppercase tracking-widest px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white dark:bg-slate-800 text-[#1A1A1A] dark:text-slate-200 border border-[#1A1A1A]/10 dark:border-slate-700 font-bold"
                     >
                       {tag}
                     </span>
@@ -234,10 +252,12 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
 
               {/* Section 6: La Galerie Visuelle avec légendes (figure & figcaption) */}
               {project.images && project.images.length > 0 && (
-                <div className="pt-6 sm:pt-8 border-t border-[#1A1A1A]/[0.08] space-y-4 sm:space-y-6">
-                  <div className="flex items-center gap-2 font-display font-bold text-lg sm:text-xl text-[#1A1A1A]">
+                <div className="pt-6 sm:pt-8 border-t border-[#1A1A1A]/[0.08] dark:border-slate-800 space-y-4 sm:space-y-6">
+                  <div className="flex items-center gap-2 font-display font-bold text-lg sm:text-xl text-[#1A1A1A] dark:text-slate-100">
                     <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#00B2A9]" />
-                    <span>6. La Galerie Visuelle ({project.images.length})</span>
+                    <span>
+                      {translate("6. La Galerie Visuelle", "6. Visual Gallery")} ({project.images.length})
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -259,7 +279,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                               <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white font-body text-xs px-3.5 py-1.5 rounded-full backdrop-blur-sm font-semibold tracking-wide">
-                                🔍 Agrandir
+                                {translate("🔍 Agrandir", "🔍 Zoom")}
                               </span>
                             </div>
                           </div>
@@ -286,7 +306,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                 onClick={onClose}
                 className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#1A1A1A] text-[#F0EBE1] hover:bg-[#00B2A9] font-body text-[11px] sm:text-xs uppercase tracking-wider transition-colors font-bold shrink-0"
               >
-                Fermer <span className="hidden sm:inline">et ranger la carte</span> <ArrowRight className="w-3.5 h-3.5" />
+                {translate("Fermer", "Close")} <span className="hidden sm:inline">{translate("et ranger la carte", "and put away card")}</span> <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
@@ -309,7 +329,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                     setLightboxItem(null);
                   }}
                   className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors"
-                  aria-label="Fermer le zoom"
+                  aria-label={translate("Fermer le zoom", "Close zoom")}
                 >
                   <X className="w-5 h-5 text-white" />
                 </button>

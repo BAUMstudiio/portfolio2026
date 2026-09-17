@@ -21,7 +21,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="scroll-smooth">
-      <body className="bg-[#F0EBE1] text-[#1A1A1A] antialiased selection:bg-[#00B2A9]/20 selection:text-[#1A1A1A] h-screen overflow-hidden">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var savedTheme = localStorage.getItem('theme');
+                  if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-[#FCFAF8] dark:bg-[#121212] text-slate-900 dark:text-[#F0EBE1] transition-colors duration-500 antialiased selection:bg-[#00B2A9]/20 selection:text-slate-900 min-h-screen overflow-y-auto overflow-x-hidden">
         {children}
       </body>
     </html>

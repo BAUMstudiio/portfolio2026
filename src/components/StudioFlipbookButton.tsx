@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 import Image from "next/image";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { formatImageUrl } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 const STUDIO_IMAGES = [
   formatImageUrl("/assets/images studio/Projet_Radaz_site_mockup.webp"),
@@ -23,6 +24,7 @@ const STUDIO_IMAGES = [
 
 
 export default function StudioFlipbookButton() {
+  const { translate } = useLanguage();
   const [isHovered, setIsHovered] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { isMobile } = useWindowSize();
@@ -102,7 +104,7 @@ export default function StudioFlipbookButton() {
         animate={{ opacity: 1, x: 0, scale: 1 }}
         exit={{ opacity: 0, x: 10, scale: 0.95 }}
         transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
-        className="relative inline-flex items-center shrink-0 ml-auto"
+        className="relative inline-flex items-center justify-center shrink-0 mx-auto"
         onMouseEnter={() => !isMobile && setIsHovered(true)}
         onMouseLeave={() => !isMobile && setIsHovered(false)}
       >
@@ -113,7 +115,7 @@ export default function StudioFlipbookButton() {
           className="relative px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#FF3300] hover:bg-[#E02D00] text-white font-display text-[11px] sm:text-xs md:text-sm font-bold tracking-tight shadow-md hover:shadow-xl transition-all duration-300 flex items-center gap-1.5 sm:gap-2 border border-[#FF3300] group shrink-0 whitespace-nowrap cursor-pointer"
         >
           <span className="text-white font-bold tracking-tight">
-            découvrir mon studio de design
+            {translate("découvrir mon studio de design", "discover my design studio")}
           </span>
           <span className="text-white font-bold group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200">
             ↗

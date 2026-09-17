@@ -93,7 +93,7 @@ export default function ProjectDetailDrawer({ project, onClose }: ProjectDetailD
                   </span>
                 </div>
 
-                <h3 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight uppercase">
+                <h3 className="font-display font-semibold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight uppercase">
                   {project.title}
                 </h3>
 

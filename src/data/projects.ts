@@ -138,6 +138,38 @@ export const PROJECTS: Project[] = [
     },
   },
   {
+    id: "72h-agiles-carsat",
+    pillarId: "product-tech",
+    title: "Hackathon 72h Agiles",
+    role: "Product Designer & Developer",
+    context: "Carsat / 72h Agiles",
+    year: "2024",
+    summary: "Conception et développement d'une solution d'assistance et de prévention des risques en 72 heures chrono.",
+    highlightMetric: "Projet finaliste",
+    tags: ["Hackathon", "Agile", "Prototypage Rapide", "UX/UI"],
+    caseStudy: {
+      problem: {
+        title: "Le Problème Métier",
+        painPoint: "Besoin d'une solution innovante et déployable rapidement pour répondre aux enjeux de prévention des risques de la Carsat.",
+        objective: "Prototyper une solution digitale fonctionnelle et centrée utilisateur en un temps record (72h).",
+      },
+      solution: {
+        title: "La Solution & L'Approche",
+        methodology: "Méthodologie agile condensée, idéation rapide, maquettage intensif et développement d'un MVP démontrable.",
+        deliverable: "Application MVP interactive présentée devant le jury d'experts.",
+      },
+      impact: {
+        title: "L'Impact & Les Résultats",
+        measurable: "Validation du concept par les experts métiers et sélection parmi les projets finalistes.",
+        deliverablesList: ["Maquettes UX/UI", "MVP Fonctionnel", "Pitch Deck"],
+      },
+      stack: {
+        methodologies: ["Agile", "Design Thinking", "Rapid Prototyping"],
+        toolsAndTech: ["Figma", "Next.js", "GitHub"],
+      },
+    },
+  },
+  {
     id: "renault-ai-assistants",
     pillarId: "product-tech",
     title: "Assistants IA & Prototypage Dynamique",
